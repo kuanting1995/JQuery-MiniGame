@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>打地鼠</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+    />
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
+    <style>
+      * {
+        margin: 0;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        /* 背景 */
+        background-image: url(./image/Frame\ 131.jpg);
+        background-size: cover;
+        /*槌子圖*/
+        cursor: url(./image/hammer100.png), auto;
+      }
+      /* 水平置中的主體盒子 */
+      main {
+        width: 600px;
+        height: 600px;
+        /*border: 1px solid white;*/
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        display: table;
+      }
+      /* 每一行 */
+      section {
+        width: 100%;
+        height: 150px;
+        display: table-row;
+      }
+      /* 一行中的一塊 */
+      div {
+        width: 150px;
+        height: 150px;
+        background-image: url(./image/hole.png);
+        background-repeat: no-repeat;
+        background-size: 100%;
+        background-position: bottom;
+        text-align: center;
+        display: table-cell;
+        vertical-align: bottom;
+      }
+      /* 地鼠圖 */
+      img {
+        width: 70%;
+        height: 0;
+        margin-bottom: 15px;
+      }
+      /* 計分板 */
+      .score {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background-color: #efb7a5;
+        color: white;
+        position: absolute;
+        top: 100px;
+        right: 0px;
+        border-top-right-radius: 15px;
+        border-bottom-right-radius: 15px;
+        text-align: center;
+        line-height: 200px;
+        font-size: 50px;
+      }
+      /*地鼠秀出和隱藏動畫*/
+      @keyframes show {
+        from {
+          height: 0;
+        }
+        to {
+          height: 70%;
+        }
+      }
+      @keyframes hide {
+        from {
+          height: 70%;
+        }
+        to {
+          height: 0;
+        }
+      }
+      /* 秀出 */
+      .show {
+        animation: show 0.5s linear;
+        /*设置动画前后是否保留动画样式*/
+        /* animation-fill-mode: both; */
+        animation-fill-mode: both;
+      }
+      /* 隱藏 */
+      .hide {
+        animation: hide 0.1s linear;
+        /*animation-fill-mode: both;*/
+      }
+    </style>
+  </head>
+  <body>
+    <audio src="./audio/Super Mario.mp3" autoplay loop></audio>
+    <audio src="./audio/pugi.mp3"></audio>
+
+    <main>
+      <section>
+        <div><img src="image/beebee_pic.png" alt="地鼠" /></div>
+        <div><img src="image/beebee_pic.png" alt="地鼠" /></div>
+        <div><img src="image/beebee_pic.png" alt="地鼠" /></div>
+        <div><img src="image/beebee_pic.png" alt="地鼠" /></div>
+      </section>
+      <section>
+        <div><img src="image/beebee_pic.png" alt="地鼠" /></div>
+        <div><img src="image/beebee_pic.png" alt="地鼠" /></div>
+        <div><img src="image/beebee_pic.png" alt="地鼠" /></div>
+        <div><img src="image/beebee_pic.png" alt="地鼠" /></div>
+      </section>
+      <section>
+        <div><img src="image/beebee_pic.png" alt="地鼠" /></div>
+        <div><img src="image/beebee_pic.png" alt="地鼠" /></div>
+        <div><img src="image/beebee_pic.png" alt="地鼠" /></div>
+        <div><img src="image/beebee_pic.png" alt="地鼠" /></div>
+      </section>
+    </main>
+
+    <p class="score" id="score">計分：0</p>
+  </body>
+  <script>
+    /*思路
+1.獲取地鼠
+2.地鼠出現和消失
+3.定時跑出地鼠
+4.敲打地鼠
+5.更新槌子狀態
+*/
+
+    //1.獲取地鼠
+    var mouses = $("img");
+    var score = 0;
+    //2.地鼠出現與消失
+    function show() {
+      //隨機生出地鼠(索引值)
+      var n = parseInt(Math.random() * 16);
+      //獲取地鼠
+      var mouse = mouses.get(n);
+      //新增class屬性秀出,移除class屬性hide
+      $(mouse).addClass("show").removeClass("hide");
+      //地鼠隱藏(回洞裡)
+      function hide() {
+        $(mouse).addClass("hide").removeClass("show");
+      }
+      //2秒隱藏
+      setTimeout(hide, 2000);
+    }
+
+    //3.定時跑出地鼠
+    function play() {
+      show();
+    }
+
+    setInterval(play, 3000);
+
+    function play() {
+      show();
+      show();
+    }
+
+    setInterval(play, 8000);
+
+    //4.點擊事件(敲打地鼠後隱藏並加分數)
+    $("img").on("click", function () {
+      $(this).addClass("hide").removeClass("show");
+      score++;
+      $("#score").text("計分:" + score);
+      $("audio").get(1).play();
+    });
+
+    //5.槌子狀態(點擊後換圖)
+    $("body").on("mousedown", function () {
+      $("body").css("cursor", "url(image/hammer_down100.png),auto");
+    });
+    $("body").on("mouseup", function () {
+      $("body").css("cursor", "url(image/hammer100.png),auto");
+    });
+  </script>
+</html>
