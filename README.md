@@ -1,5 +1,5 @@
 # JQuery-MiniGame
-小遊戲Demo
+Html+Css+JQuery
 
 簡易打地鼠
 1.亂數隨機跑出地鼠
